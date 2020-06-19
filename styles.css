@@ -1,0 +1,83 @@
+/* 
+blue: #AAD5DA
+green: #B8DFB5
+white: #F0ECE7
+brown: #CBA887
+black: #2D2E30
+*/
+
+
+:root {
+    --blue: #AAD5DA;
+    --green: #B8DFB5;
+    --white: #F0ECE7;
+    --brown: #CBA887;
+    --black: #2D2E30;  
+}
+
+body {
+    background: var(--white);
+    padding: 0;
+    margin: 0;
+}
+
+h1 {
+    background: var(--green);
+    margin: 0;
+    margin-left: 5px;
+    padding: 20px;
+}
+
+#app {
+    margin: 0;
+    padding: 0;
+    background: var(--white);
+}
+
+p {
+    margin: 0;
+}
+
+ol {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.fish-container {
+    background: var(--blue);
+    list-style-type: none;
+    display: grid;
+    width: 100%;
+    grid-template-areas: 
+        "fish-name  fish-info month-list"
+        "fish-image fish-info month-list"
+        ;
+
+    
+    grid-template-rows: 26px 1fr;
+    grid-template-columns: 128px 1fr 1fr;
+    margin: 5px;
+}
+
+li.fish-container > img {
+    grid-area: fish-image;
+    width: 128px;
+    height: 128px;
+}
+
+li.fish-container > label {
+    grid-area: fish-name;
+}
+
+li.fish-container > div {
+    grid-area: fish-info;
+}
+
+
+.month-list {
+    grid-area: month-list;
+}
+
+
+
