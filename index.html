@@ -18,48 +18,14 @@
 
     <div id="app">
         <h2>Availiable</h2>
-        <div class="fish-container" v-for="(fish, name) in fishes" v-bind:key="name" class="fish-container" v-on:click="completeFish(name)">
-            <label>{{fish.name["name-USen"]}}</label>
-            <img v-bind:src="fish.icon_uri" />
-            <div class="fish-info">
-                <p>Time: {{fish.availability.isAllDay ? "All Day": fish.availability.time}}</p>
-                <p>Location: {{fish.availability.location}}</p>
-                <p>Rarity: {{fish.availability.rarity}}</p>
-                <p>Shadow: {{fish.shadow}}</p>
-            </div>
-            <div class="months">
-                <div v-for="i in 12">
-                    <div class="enabled-month month" v-if="fish.availability['month-array-northern'].includes(i)">
-                        {{monthArray[i-1]}}
-                    </div>
-                    <div class="disabled-month month" v-else>
-                        {{monthArray[i-1]}}
-                    </div>
-                </div>
-            </div>
-        </div>
+        <fish-row v-for="(fish, name) in fishes" class="fish-container" v-bind:key="name"
+            v-on:click.native="completeFish(name)" v-bind:fish="fish" v-bind:name="name">
+        </fish-row>
 
         <h2>Completed</h2>
-        <div class="fish-container" v-for="(fish, name) in completedFish" v-bind:key="name" class="fish-container" v-on:click="unCompleteFish(name)">
-            <label>{{fish.name["name-USen"]}}</label>
-            <img v-bind:src="fish.icon_uri" />
-            <div class="fish-info">
-                <p>Time: {{fish.availability.isAllDay ? "All Day": fish.availability.time}}</p>
-                <p>Location: {{fish.availability.location}}</p>
-                <p>Rarity: {{fish.availability.rarity}}</p>
-                <p>Shadow: {{fish.shadow}}</p>
-            </div>
-            <div class="months">
-                <div v-for="i in 12">
-                    <div class="enabled-month month" v-if="fish.availability['month-array-northern'].includes(i)">
-                        {{monthArray[i-1]}}
-                    </div>
-                    <div class="disabled-month month" v-else>
-                        {{monthArray[i-1]}}
-                    </div>
-                </div>
-            </div>
-        </div>
+        <fish-row v-for="(fish, name) in completedFish" class="fish-container" v-bind:key="name"
+            v-on:click.native="unCompleteFish(name)" v-bind:fish="fish" v-bind:name="name">
+        </fish-row>
     </div>
 
 
@@ -69,9 +35,7 @@
             el: '#app',
             data: {
                 monthArray: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-                fishes: function () {
-                    return {}
-                    },
+                fishes: {},
                 completedFish: {}
             },
             methods: {
@@ -79,25 +43,51 @@
                     const fish = this.fishes[fishKey];
                     Vue.delete(this.fishes, fishKey);
                     console.log(fish);
-                    this.completedFish = {...this.completedFish, [fishKey]: fish};
+                    this.completedFish = { ...this.completedFish, [fishKey]: fish };
                 },
                 unCompleteFish: function (fishKey) {
                     const fish = this.completedFish[fishKey];
                     Vue.delete(this.completedFish, fishKey);
                     console.log(fish);
-                    this.fishes = {...this.fishes, [fishKey]: fish};
-                },
+                    this.fishes = { ...this.fishes, [fishKey]: fish };
+                }
             }
         })
 
+        Vue.component('fish-row', {
+            props: ['fish', 'name'],
+            data: () => ({
+                monthArray: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            })
+            ,
+            template: `
+            <div>
+            <label>{{fish.name["name-USen"]}}</label>
+            <img v-bind:src="fish.icon_uri" />
+            <div class="fish-info">
+                <p>Time: {{fish.availability.isAllDay ? "All Day": fish.availability.time}}</p>
+                <p>Location: {{fish.availability.location}}</p>
+                <p>Rarity: {{fish.availability.rarity}}</p>
+                <p>Shadow: {{fish.shadow}}</p>
+            </div>
+            <div class="months">
+                <div v-for="i in 12">
+                    <div class="enabled-month month" v-if="fish.availability['month-array-northern'].includes(i)">
+                        {{monthArray[i-1]}}
+                    </div>
+                    <div class="disabled-month month" v-else>
+                        {{monthArray[i-1]}}
+                    </div>
+                </div>
+            </div>
+            </div>
+            `
+        })
         async function getFish() {
             return await fetch('https://acnhapi.com/v1/fish').then(response => response.json())
         }
 
-
         getFish().then(fish => app.fishes = fish)
-
-
     </script>
 
 
