@@ -17,23 +17,26 @@
     <h1>Animal Crossing</h1>
 
     <div id="app">
-        <ol>
-            <li v-for="(fish, name) in fishes" class="fish-container">
-                <label>{{name}}</label>
-                <img v-bind:src="fish.icon_uri" />
-                <div>
-                    <p>{{fish.availability.isAllDay ? "All Day": fish.availability.time}}</p>
-                    <p>{{fish.availability.rarity}}</p>
-                    <p>{{fish.availability.location}}</p>
-                    <p>{{fish.shadow}}</p>
+        <div class="fish-container" v-for="(fish, name) in fishes" class="fish-container">
+            <label>{{name}}</label>
+            <img v-bind:src="fish.icon_uri" />
+            <div class="fish-info">
+                <p>Time: {{fish.availability.isAllDay ? "All Day": fish.availability.time}}</p>
+                <p>Location: {{fish.availability.location}}</p>
+                <p>Rarity: {{fish.availability.rarity}}</p>
+                <p>Shadow: {{fish.shadow}}</p>
+            </div>
+            <div class="months">
+                <div v-for="i in 12">
+                    <div class="enabled-month month" v-if="fish.availability['month-array-northern'].includes(i)">
+                        {{monthDictionary[i-1]}}
+                    </div>
+                    <div class="disabled-month month" v-else>
+                        {{monthDictionary[i-1]}}
+                    </div>
                 </div>
-                <ol class="month-list" v-for="month of fish.availability['month-array-northern']">
-                    <li>{{month}}</li>
-                </ol>
-    </div>
-
-    </li>
-    </ol>
+            </div>
+        </div>
     </div>
 
 
@@ -42,6 +45,7 @@
         var app = new Vue({
             el: '#app',
             data: {
+                monthDictionary: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
                 fishes: {}
             }
         })
