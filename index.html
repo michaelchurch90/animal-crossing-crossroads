@@ -7,10 +7,12 @@
 
     <!-- development version, includes helpful console warnings -->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <!-- production version, optimized for size and speed -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
 </head>
 
-<!-- production version, optimized for size and speed -->
-<!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
+
 
 <body>
 
@@ -83,11 +85,13 @@
             </div>
             `
         })
-        async function getFish() {
-            return await fetch('https://acnhapi.com/v1/fish').then(response => response.json())
+        async function populateFish() {
+            const fish = await fetch('https://acnhapi.com/v1/fish')
+                .then(response => response.json())
+            app.fishes = fish;
         }
 
-        getFish().then(fish => app.fishes = fish)
+        populateFish()
     </script>
 
 

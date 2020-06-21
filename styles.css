@@ -61,6 +61,8 @@ div.fish-container {
     align-items: start;
 
     margin: 5px;
+    border-radius: 40px;
+
 
 }
 
@@ -72,6 +74,7 @@ div.fish-container {
 
 .fish-container > label {
     grid-area: fish-name;
+    justify-self: center;
 }
 
 .fish-info {
