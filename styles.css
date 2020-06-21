@@ -1,0 +1,105 @@
+/* 
+blue: #AAD5DA
+green: #B8DFB5
+white: #F0ECE7
+brown: #CBA887
+black: #2D2E30
+*/
+
+
+:root {
+    --blue: #AAD5DA;
+    --green: #B8DFB5;
+    --white: #F0ECE7;
+    --brown: #CBA887;
+    --black: #2D2E30;  
+}
+
+body {
+    background: var(--white);
+    padding: 0;
+    margin: 0;
+}
+
+h1 {
+    background: var(--green);
+    margin: 0;
+    margin-left: 5px;
+    padding: 20px;
+}
+
+#app {
+    margin: 0;
+    padding: 0;
+    background: var(--white);
+}
+
+p {
+    margin: 0;
+}
+
+ol {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+div.fish-container {
+    background: var(--blue);
+    list-style-type: none;
+    display: grid;
+    width: 100%;
+    height: 144px;
+    grid-template-areas: 
+        "fish-name  .         ."
+        "fish-image fish-info months"
+        ;
+    
+
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 128px 1fr 3fr;
+    align-items: start;
+
+    margin: 5px;
+    border-radius: 40px;
+
+
+}
+
+.fish-container > img {
+    grid-area: fish-image;
+    width: 128px;
+    height: 128px;
+}
+
+.fish-container > label {
+    grid-area: fish-name;
+    justify-self: center;
+}
+
+.fish-info {
+    grid-area: fish-info;
+}
+
+.months {
+    background: var(--brown);
+    grid-area: months;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repate(3, 1fr);
+    gap: 2px;
+    padding: 2px;
+}
+
+.enabled-month {
+    background: var(--green);
+}
+
+.disabled-month {
+    background: var(--blue);
+    color: var(--brown);
+
+}
+
+
+
