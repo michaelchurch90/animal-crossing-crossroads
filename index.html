@@ -62,15 +62,23 @@
                 monthArray: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
             })
             ,
+            /*html*/
             template: `
             <div>
             <label>{{fish.name["name-USen"]}}</label>
             <img v-bind:src="fish.icon_uri" />
             <div class="fish-info">
-                <p>Time: {{fish.availability.isAllDay ? "All Day": fish.availability.time}}</p>
-                <p>Location: {{fish.availability.location}}</p>
-                <p>Rarity: {{fish.availability.rarity}}</p>
-                <p>Shadow: {{fish.shadow}}</p>
+                <label class="availability">Availability</label>
+                <p class="availability">{{fish.availability.isAllDay ? "All Day": fish.availability.time}}</p>
+
+                <label class="location">Location</label>
+                <p class="location">{{fish.availability.location}}</p>
+
+                <label class="rarity">Rarity</label>
+                <p class="rarity">{{fish.availability.rarity}}</p>
+
+                <label class="shadow" >Shadow</label>
+                <p class="shadow">{{fish.shadow}}</p>
             </div>
             <div class="months">
                 <div v-for="i in 12">

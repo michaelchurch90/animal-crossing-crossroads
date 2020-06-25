@@ -16,60 +16,46 @@ black: #2D2E30
 }
 
 body {
-    background: var(--white);
+    /* background: var(--white); */
     padding: 0;
     margin: 0;
+    background: var(--white)
 }
 
-h1 {
-    background: var(--green);
-    margin: 0;
-    margin-left: 5px;
-    padding: 20px;
+h1, h2 {
+    /* background: var(--green); */
+  
+    text-align: center;
 }
 
-#app {
-    margin: 0;
-    padding: 0;
-    background: var(--white);
-}
+
 
 p {
-    margin: 0;
-}
-
-ol {
-    list-style-type: none;
+    margin: 0.5em;
     padding: 0;
-    margin: 0;
 }
 
-div.fish-container {
-    background: var(--blue);
-    list-style-type: none;
+
+.fish-container {
+    /* background: var(--blue); */
     display: grid;
-    width: 100%;
-    height: 144px;
     grid-template-areas: 
-        "fish-name  .         ."
+        "fish-image fish-name         ."
         "fish-image fish-info months"
         ;
+
+    margin: .4em;
     
-
-    grid-template-rows: 1fr 1fr 1fr 1fr;
-    grid-template-columns: 128px 1fr 3fr;
-    align-items: start;
-
-    margin: 5px;
-    border-radius: 40px;
-
-
+    box-shadow:  2px 2px 4px 1px rgba(0,0,0,0.75);;
+    grid-template-columns: 128px 1fr 1fr;
+    background: var(--white);
 }
 
 .fish-container > img {
     grid-area: fish-image;
-    width: 128px;
-    height: 128px;
+    width: auto;
+    height: 100%;
+    background: var(--blue);
 }
 
 .fish-container > label {
@@ -79,16 +65,65 @@ div.fish-container {
 
 .fish-info {
     grid-area: fish-info;
+    display: grid;
+    grid-template-areas: 
+    "availability-title location-title rarity-title shadow-title"
+    "availability-info  location-info  rarity-info  shadow-info";
+
+    justify-items: start;
+    align-items: end;
+}
+
+.fish-info > p, .fish-info > label {
+    margin: 0;
+    padding: 0;
+}
+
+label.availability {
+    grid-area: availability-title;
+}
+p.availability {
+    grid-area: availability-info;   
+}
+
+label.location {
+    grid-area: location-title;
+}
+p.location {
+    grid-area: location-info;   
+}
+
+label.rarity {
+    grid-area: rarity-title;
+}
+p.rarity {
+    grid-area: rarity-info;
+}
+
+label.shadow {
+    grid-area: shadow-title;
+}
+p.shadow {
+    grid-area: shadow-info;  
 }
 
 .months {
-    background: var(--brown);
+    /* background: var(--brown); */
     grid-area: months;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repate(3, 1fr);
-    gap: 2px;
-    padding: 2px;
+    /* grid-template-rows: repeat(3, 1fr); */
+    /* justify-items: stretch; */
+    /* align-items: stretch; */
+    gap: 4px;
+    /* align-content: center; */
+}
+
+.month {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .enabled-month {
@@ -96,9 +131,7 @@ div.fish-container {
 }
 
 .disabled-month {
-    background: var(--blue);
-    color: var(--brown);
-
+    
 }
 
 
