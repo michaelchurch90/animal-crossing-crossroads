@@ -68,18 +68,22 @@
             <label>{{fish.name["name-USen"]}}</label>
             <img v-bind:src="fish.icon_uri" />
 
-            <label class="availability fish-info">Availability</label>
-            <p class="availability fish-info">{{fish.availability.isAllDay ? "All Day": fish.availability.time}}</p>
-
-            <label class="location fish-info">Location</label>
-            <p class="location fish-info">{{fish.availability.location}}</p>
-
-            <label class="rarity fish-info">Rarity</label>
-            <p class="rarity fish-info">{{fish.availability.rarity}}</p>
-
-            <label class="shadow fish-info" >Shadow</label>
-            <p class="shadow fish-info">{{fish.shadow}}</p>
-            
+            <div class="fish-info availability">
+                <label>Availability</label>
+                <p>{{fish.availability.isAllDay ? "All Day": fish.availability.time}}</p>
+            </div>
+            <div class="fish-info location">
+                <label>Location</label>
+                <p>{{fish.availability.location}}</p>
+            </div>
+            <div class="fish-info rarity">
+                <label>Rarity</label>
+                <p>{{fish.availability.rarity}}</p>
+            </div>
+            <div class="fish-info end shadow">
+                <label>Shadow</label>
+                <p>{{fish.shadow}}</p>
+            </div>
             <div class="months">
                 <div v-for="i in 12">
                     <div class="enabled-month month" v-if="fish.availability['month-array-northern'].includes(i)">

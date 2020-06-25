@@ -40,9 +40,8 @@ p {
     /* background: var(--blue); */
     display: grid;
     grid-template-areas: 
-        "fish-image fish-name          .              .            .            months"
-        "fish-image availability-title location-title rarity-title shadow-title months"
-        "fish-image availability-info  location-info  rarity-info  shadow-info  months"
+        "fish-image fish-name        .        .      .       months"
+        "fish-image availability     location rarity shadow  months"
         ;
 
     margin: .4em;
@@ -56,6 +55,7 @@ p {
     grid-area: fish-image;
     background: var(--blue);
     object-fit: contain;
+    width: 100px;
 }
 
 .fish-container > label {
@@ -63,38 +63,31 @@ p {
     justify-self: start;
 }   
 
-p.fish-info,  label.fish-info {
-    place-self: start;
+.fish-info {
+    justify-self: start;
+
+    border-right: 1px solid grey;
+
     margin: 0;
-    padding: 0;
+    padding: 10px;
 }
 
-label.availability {
-    grid-area: availability-title;
-}
-p.availability {
-    grid-area: availability-info;   
+/* .fish-info.end {
+    border-right: none;
+} */
+
+.availability {
+    grid-area: availability;
 }
 
-label.location {
-    grid-area: location-title;
+.location {
+    grid-area: location;
 }
-p.location {
-    grid-area: location-info;   
+.rarity {
+    grid-area: rarity;
 }
-
-label.rarity {
-    grid-area: rarity-title;
-}
-p.rarity {
-    grid-area: rarity-info;
-}
-
-label.shadow {
-    grid-area: shadow-title;
-}
-p.shadow {
-    grid-area: shadow-info;  
+.shadow {
+    grid-area: shadow;
 }
 
 .months {
