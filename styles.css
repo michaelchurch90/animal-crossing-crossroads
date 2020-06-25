@@ -40,41 +40,31 @@ p {
     /* background: var(--blue); */
     display: grid;
     grid-template-areas: 
-        "fish-image fish-name         ."
-        "fish-image fish-info months"
+        "fish-image fish-name          .              .            .            months"
+        "fish-image availability-title location-title rarity-title shadow-title months"
+        "fish-image availability-info  location-info  rarity-info  shadow-info  months"
         ;
 
     margin: .4em;
     
     box-shadow:  2px 2px 4px 1px rgba(0,0,0,0.75);;
-    grid-template-columns: 128px 1fr 1fr;
+    grid-template-columns: auto 2fr 2fr 2fr 2fr 2fr;
     background: var(--white);
 }
 
 .fish-container > img {
     grid-area: fish-image;
-    width: auto;
-    height: 100%;
     background: var(--blue);
+    object-fit: contain;
 }
 
 .fish-container > label {
     grid-area: fish-name;
-    justify-self: center;
-}
+    justify-self: start;
+}   
 
-.fish-info {
-    grid-area: fish-info;
-    display: grid;
-    grid-template-areas: 
-    "availability-title location-title rarity-title shadow-title"
-    "availability-info  location-info  rarity-info  shadow-info";
-
-    justify-items: start;
-    align-items: end;
-}
-
-.fish-info > p, .fish-info > label {
+p.fish-info,  label.fish-info {
+    place-self: start;
     margin: 0;
     padding: 0;
 }
