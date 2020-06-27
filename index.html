@@ -20,20 +20,14 @@
 
     <div id="app">
         <h2>Availiable</h2>
-        <fish-row v-for="(fish, name) in fishes" 
-            class="fish-container" v-bind:key="name"
-            v-on:on-select="completeFish(name)" 
-            v-bind:fish="fish" 
-            v-bind:name="name"
+        <fish-row v-for="(fish, name) in fishes" class="fish-container" v-bind:key="name"
+            v-on:on-select="completeFish(name)" v-bind:fish="fish" v-bind:name="name"
             v-bind:select-action="completeButtonText">
         </fish-row>
 
         <h2>Completed</h2>
-        <fish-row v-for="(fish, name) in completedFish" 
-            class="fish-container" v-bind:key="name"
-            v-on:on-select="unCompleteFish(name)" 
-            v-bind:fish="fish" 
-            v-bind:name="name"
+        <fish-row v-for="(fish, name) in completedFish" class="fish-container" v-bind:key="name"
+            v-on:on-select="unCompleteFish(name)" v-bind:fish="fish" v-bind:name="name"
             v-bind:select-action="unCompleteButtonText">
         </fish-row>
     </div>
@@ -64,6 +58,27 @@
                     Vue.delete(this.completedFish, fishKey);
                     console.log(fish);
                     this.fishes = { ...this.fishes, [fishKey]: fish };
+                },
+                clearStorage: function() {
+                    localStorage.removeItem("completedFish")
+                    localStorage.removeItem("fishes")
+                }
+            },
+            watch: {
+                fishes(fishes) {
+                    console.log("Fishes changed")
+                    localStorage.fishes = JSON.stringify(fishes);
+                },
+                completedFish(completedFish) {
+                    console.log("Completed Fishes changed")
+                    localStorage.completedFish  = JSON.stringify(completedFish);
+                }
+            },
+            mounted: async function () {
+                // this.clearStorage()
+                this.fishes= await fetchFish()
+                if(localStorage.completedFish) {
+                    this.completedFish = JSON.parse(localStorage.completedFish);
                 }
             }
         })
@@ -74,7 +89,7 @@
                 monthArray: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
             }),
             methods: {
-                selectFish: function(fish) {
+                selectFish: function (fish) {
                     this.$emit("on-select")
                 }
             },
@@ -114,13 +129,18 @@
             </div>
             `
         })
-        async function populateFish() {
-            const fish = await fetch('https://acnhapi.com/v1/fish')
-                .then(response => response.json())
-            app.fishes = fish;
+        async function fetchFish() {
+            if (localStorage.fishes) {
+                return JSON.parse(localStorage.fishes)
+            } else {
+                const fishes = await fetch('https://acnhapi.com/v1/fish')
+                    .then(response => response.json())
+                localStorage.fishes = JSON.stringify(fishes);
+                return fishes;
+            }
+
         }
 
-        populateFish()
     </script>
 
 
