@@ -35,34 +35,62 @@ p {
     padding: 0;
 }
 
+.fish-label {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-top: 1px solid  rgba(0,0,0,0.25);
+    border-left: 1px solid  rgba(0,0,0,0.25);
+    border-right: 1px solid  rgba(0,0,0,0.25);
+
+
+    /* margin-left: .4em; */
+
+    margin-top: 8px;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 2px;
+    padding-left: 4px;
+    padding-right: 4px;
+    width: fit-content;
+}
 
 .fish-container {
+    margin-top: 0;
+    margin-left: 4em;
+    margin-right: 4em;
+    margin-bottom: 0;
+
+}
+
+
+.fish-info-layout:hover {
+    border: 4px solid var(--green);
+}
+
+.fish-info-layout:active {
+    border: 1px solid rgba(0,0,0,.25);
+}
+
+.fish-info-layout {
     /* background: var(--blue); */
     display: grid;
     grid-template-areas: 
-        "fish-image fish-name        .        .      .       months"
         "fish-image availability     location rarity shadow  months"
         "fish-image complete         .        .       .      months"
         ;
 
-    margin: .4em;
     
-    box-shadow:  2px 2px 4px 1px rgba(0,0,0,0.75);;
+    box-shadow:  1px 1px 1px 1px rgba(0,0,0,0.75);;
     grid-template-columns: auto repeat(4, 1fr) 3fr;
     background: var(--white);
-    margin:4px;
-    border-radius: 10px;
+    /* border-radius: 10px; */
 
 }
-
 
 .fish-image {
     grid-area: fish-image;
     background: var(--blue);
     object-fit: contain;
-    border-bottom-left-radius: 10px;
-    border-top-left-radius: 10px;
-
 }
 
 .fish-image > img {
@@ -70,13 +98,11 @@ p {
     width: 100px;
 }
 
-
-
 button.complete {
     grid-area: complete;
     border: 1px solid rgba(0,0,0,0.25);
-    background-color: var(--green);
-    /* box-shadow:  1px 1px 1px 1px rgba(0,0,0,0.5); */
+    /* background-color: var(--green); */
+    box-shadow:  1px 1px 1px 1px rgba(0,0,0,0.5);
     margin: 2px;
     border-radius: 10px;
 
@@ -86,7 +112,7 @@ button.complete {
 .fish-container > label {
     grid-area: fish-name;
     justify-self: start;
-}   
+}       
 
 .fish-info {
     /* justify-self: start; */
