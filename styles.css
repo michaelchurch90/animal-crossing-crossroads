@@ -42,13 +42,13 @@ p {
     grid-template-areas: 
         "fish-image fish-name        .        .      .       months"
         "fish-image availability     location rarity shadow  months"
-        "fish-image complete         complete .       .      months"
+        "fish-image complete         .        .       .      months"
         ;
 
     margin: .4em;
     
     box-shadow:  2px 2px 4px 1px rgba(0,0,0,0.75);;
-    grid-template-columns: auto 2fr 2fr 2fr 2fr 2fr;
+    grid-template-columns: auto repeat(4, 1fr) 3fr;
     background: var(--white);
     margin:4px;
     border-radius: 10px;
@@ -75,10 +75,11 @@ p {
 button.complete {
     grid-area: complete;
     border: 1px solid rgba(0,0,0,0.25);
-    background-color: inherit;
+    background-color: var(--green);
     /* box-shadow:  1px 1px 1px 1px rgba(0,0,0,0.5); */
     margin: 2px;
     border-radius: 10px;
+
 
 }
 
@@ -88,13 +89,18 @@ button.complete {
 }   
 
 .fish-info {
-    justify-self: start;
-
+    /* justify-self: start; */
+    text-align: start;
     /* If I want the lines I might start with this */
     /* border-right: 1px solid grey; */
 
     margin: 0;
     padding: 10px;
+}
+
+.fish-info > p, .fish-info > label {
+    margin: 0;
+    padding: 0;
 }
 
 
