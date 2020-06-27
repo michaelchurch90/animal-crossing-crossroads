@@ -20,13 +20,21 @@
 
     <div id="app">
         <h2>Availiable</h2>
-        <fish-row v-for="(fish, name) in fishes" class="fish-container" v-bind:key="name"
-            v-on:click.native="completeFish(name)" v-bind:fish="fish" v-bind:name="name">
+        <fish-row v-for="(fish, name) in fishes" 
+            class="fish-container" v-bind:key="name"
+            v-on:on-select="completeFish(name)" 
+            v-bind:fish="fish" 
+            v-bind:name="name"
+            v-bind:select-action="completeButtonText">
         </fish-row>
 
         <h2>Completed</h2>
-        <fish-row v-for="(fish, name) in completedFish" class="fish-container" v-bind:key="name"
-            v-on:click.native="unCompleteFish(name)" v-bind:fish="fish" v-bind:name="name">
+        <fish-row v-for="(fish, name) in completedFish" 
+            class="fish-container" v-bind:key="name"
+            v-on:on-select="unCompleteFish(name)" 
+            v-bind:fish="fish" 
+            v-bind:name="name"
+            v-bind:select-action="unCompleteButtonText">
         </fish-row>
     </div>
 
@@ -37,8 +45,12 @@
             el: '#app',
             data: {
                 monthArray: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-                fishes: {},
-                completedFish: {}
+                completeButtonText: "Complete",
+                unCompleteButtonText: "Uncomplete",
+                fishes: {
+                },
+                completedFish: {
+                }
             },
             methods: {
                 completeFish: function (fishKey) {
@@ -57,16 +69,20 @@
         })
 
         Vue.component('fish-row', {
-            props: ['fish', 'name'],
+            props: ['fish', 'name', "selectAction"],
             data: () => ({
                 monthArray: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-            })
-            ,
+            }),
+            methods: {
+                selectFish: function(fish) {
+                    this.$emit("on-select")
+                }
+            },
             /*html*/
             template: `
             <div>
             <label>{{fish.name["name-USen"]}}</label>
-            <img v-bind:src="fish.icon_uri" />
+            <div class="fish-image"><img v-bind:src="fish.icon_uri" /></div>
 
             <div class="fish-info availability">
                 <label>Availability</label>
@@ -80,10 +96,11 @@
                 <label>Rarity</label>
                 <p>{{fish.availability.rarity}}</p>
             </div>
-            <div class="fish-info end shadow">
+            <div class="fish-info shadow">
                 <label>Shadow</label>
                 <p>{{fish.shadow}}</p>
             </div>
+            <button v-on:click="selectFish" class="complete">{{selectAction}}</button>
             <div class="months">
                 <div v-for="i in 12">
                     <div class="enabled-month month" v-if="fish.availability['month-array-northern'].includes(i)">

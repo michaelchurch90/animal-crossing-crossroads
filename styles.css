@@ -42,6 +42,7 @@ p {
     grid-template-areas: 
         "fish-image fish-name        .        .      .       months"
         "fish-image availability     location rarity shadow  months"
+        "fish-image complete         complete .       .      months"
         ;
 
     margin: .4em;
@@ -49,13 +50,36 @@ p {
     box-shadow:  2px 2px 4px 1px rgba(0,0,0,0.75);;
     grid-template-columns: auto 2fr 2fr 2fr 2fr 2fr;
     background: var(--white);
+    margin:4px;
+    border-radius: 10px;
+
 }
 
-.fish-container > img {
+
+.fish-image {
     grid-area: fish-image;
     background: var(--blue);
     object-fit: contain;
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
+
+}
+
+.fish-image > img {
+    object-fit: contain;
     width: 100px;
+}
+
+
+
+button.complete {
+    grid-area: complete;
+    border: 1px solid rgba(0,0,0,0.25);
+    background-color: inherit;
+    /* box-shadow:  1px 1px 1px 1px rgba(0,0,0,0.5); */
+    margin: 2px;
+    border-radius: 10px;
+
 }
 
 .fish-container > label {
@@ -66,15 +90,13 @@ p {
 .fish-info {
     justify-self: start;
 
-    border-right: 1px solid grey;
+    /* If I want the lines I might start with this */
+    /* border-right: 1px solid grey; */
 
     margin: 0;
     padding: 10px;
 }
 
-/* .fish-info.end {
-    border-right: none;
-} */
 
 .availability {
     grid-area: availability;
@@ -98,15 +120,19 @@ p {
     /* grid-template-rows: repeat(3, 1fr); */
     /* justify-items: stretch; */
     /* align-items: stretch; */
-    gap: 4px;
+    gap: 3px;
     /* align-content: center; */
+    padding: 4px;
 }
 
 .month {
+    border: 1px solid rgba(0,0,0,0.25);
+    border-radius: 4px;
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+
 }
 
 .enabled-month {
