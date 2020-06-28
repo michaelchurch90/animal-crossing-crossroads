@@ -21,18 +21,17 @@
     <div id="app">
         <h2>Availiable</h2>
         <fish-row v-for="fish in availableFish" 
-            v-on:on-select="completeFish(fish['file-name'])" 
+            v-bind:key="fish.id"
+            v-on:on-select="completeFish(fish.id)" 
             v-bind:fish="fish" 
-            v-bind:name="fish['file-name']"
             v-bind:select-action="completeButtonText">
         </fish-row>
 
         <h2>Completed</h2>
         <fish-row v-for="fish in computedCompletedFish" 
             v-bind:key="fish.id"
-            v-on:on-select="unCompleteFish(fish['file-name'])" 
+            v-on:on-select="unCompleteFish(fish.id)" 
             v-bind:fish="fish" 
-            v-bind:name="fish['file-name']"
             v-bind:select-action="unCompleteButtonText">
         </fish-row>
     </div>
@@ -43,54 +42,29 @@
         var app = new Vue({
             el: '#app',
             data: {
-                completedFishIds: [],
                 completeButtonText: "Complete",
                 unCompleteButtonText: "Reset",
                 fishArray: [],
-                fishes: {
-                },
-                completedFish: {
-                }
+                completedFishIds: []
             },
             methods: {
-                completeFish: function (fishKey) {
-                    console.log(fishKey);
-                    const fish = this.fishes[fishKey];
-                    // Vue.delete(this.fishes, fishKey);
-                    console.log(fish);
-                    this.completedFishIds = [...this.completedFishIds, fish.id];
-                    // this.completedFish = { ...this.completedFish, [fishKey]: fish };
+                completeFish: function (fishId) {
+                    this.completedFishIds = [...this.completedFishIds, fishId];
                 },
-                unCompleteFish: function (fishKey) {
-                    const fish = this.fishes[fishKey];
-                    // Vue.delete(this.completedFish, fishKey);
-                    console.log(fish);
-                    // this.fishes = { ...this.fishes, [fishKey]: fish };
+                unCompleteFish: function (fishId) {
                     this.completedFishIds = this.completedFishIds
-                        .filter(id => fish.id !== id)
-
+                        .filter(id => fishId !== id)
                 },
                 clearStorage: function() {
                     localStorage.removeItem("completedFishIds")
-                    localStorage.removeItem("completedFish")
-                    localStorage.removeItem("fishes")
                     localStorage.removeItem("fishArray")
 
                 }
             },
             watch: {
-                fishes(fishes) {
-                    console.log("Fishes changed")
-                    localStorage.fishes = JSON.stringify(fishes);
-                },
-                completedFish(completedFish) {
-                    console.log("Completed Fishes changed")
-                    localStorage.completedFish  = JSON.stringify(completedFish);
-                },
                 completedFishIds(completedFishIds) {
                     console.log("Saving completed fish ids")
                     localStorage.completedFishIds  = JSON.stringify(completedFishIds);
-
                 }
             },
             computed: {
@@ -107,30 +81,23 @@
 
             },
             mounted: async function () {
-                this.clearStorage()
-                if (localStorage.fishes) {
-                    this.fishes = JSON.parse(localStorage.fishes)
-                } else {
-                    this.fishes= await fetchFish()
-                    localStorage.fishes = JSON.stringify(this.fishes);
-                }
-
+                // this.clearStorage()        
                 if(localStorage.fishArray) {
-                    this.fishArray = JSON.parse(this.fishArray);
+                    this.fishArray = JSON.parse(localStorage.fishArray);
                 } else {
-                    this.fishArray = Object.values(this.fishes);
+                    const fishes = await fetchFish()
+                    this.fishArray = Object.values(fishes);
                     localStorage.fishArray = JSON.stringify(this.fishArray);
-
                 }
 
-                if(localStorage.completedFish) {
-                    this.completedFish = JSON.parse(localStorage.completedFish);
+                if(localStorage.completedFishIds) {
+                    this.completedFishIds = JSON.parse(localStorage.completedFishIds);
                 }
             }
         })
 
         Vue.component('fish-row', {
-            props: ['fish', 'name', "selectAction"],
+            props: ['fish', "selectAction"],
             data: () => ({
                 monthArray: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
             }),
