@@ -20,19 +20,19 @@
 
     <div id="app">
         <h2>Availiable</h2>
-        <fish-row v-for="(fish, name) in fishes" 
-            v-on:on-select="completeFish(name)" 
+        <fish-row v-for="fish in availableFish" 
+            v-on:on-select="completeFish(fish['file-name'])" 
             v-bind:fish="fish" 
-            v-bind:name="name"
+            v-bind:name="fish['file-name']"
             v-bind:select-action="completeButtonText">
         </fish-row>
 
         <h2>Completed</h2>
-        <fish-row v-for="(fish, name) in completedFish" 
-            v-bind:key="name"
-            v-on:on-select="unCompleteFish(name)" 
+        <fish-row v-for="fish in computedCompletedFish" 
+            v-bind:key="fish.id"
+            v-on:on-select="unCompleteFish(fish['file-name'])" 
             v-bind:fish="fish" 
-            sv-bind:name="name"
+            v-bind:name="fish['file-name']"
             v-bind:select-action="unCompleteButtonText">
         </fish-row>
     </div>
@@ -43,8 +43,10 @@
         var app = new Vue({
             el: '#app',
             data: {
+                completedFishIds: [],
                 completeButtonText: "Complete",
                 unCompleteButtonText: "Reset",
+                fishArray: [],
                 fishes: {
                 },
                 completedFish: {
@@ -52,20 +54,28 @@
             },
             methods: {
                 completeFish: function (fishKey) {
+                    console.log(fishKey);
                     const fish = this.fishes[fishKey];
-                    Vue.delete(this.fishes, fishKey);
+                    // Vue.delete(this.fishes, fishKey);
                     console.log(fish);
-                    this.completedFish = { ...this.completedFish, [fishKey]: fish };
+                    this.completedFishIds = [...this.completedFishIds, fish.id];
+                    // this.completedFish = { ...this.completedFish, [fishKey]: fish };
                 },
                 unCompleteFish: function (fishKey) {
-                    const fish = this.completedFish[fishKey];
-                    Vue.delete(this.completedFish, fishKey);
+                    const fish = this.fishes[fishKey];
+                    // Vue.delete(this.completedFish, fishKey);
                     console.log(fish);
-                    this.fishes = { ...this.fishes, [fishKey]: fish };
+                    // this.fishes = { ...this.fishes, [fishKey]: fish };
+                    this.completedFishIds = this.completedFishIds
+                        .filter(id => fish.id !== id)
+
                 },
                 clearStorage: function() {
+                    localStorage.removeItem("completedFishIds")
                     localStorage.removeItem("completedFish")
                     localStorage.removeItem("fishes")
+                    localStorage.removeItem("fishArray")
+
                 }
             },
             watch: {
@@ -76,11 +86,43 @@
                 completedFish(completedFish) {
                     console.log("Completed Fishes changed")
                     localStorage.completedFish  = JSON.stringify(completedFish);
+                },
+                completedFishIds(completedFishIds) {
+                    console.log("Saving completed fish ids")
+                    localStorage.completedFishIds  = JSON.stringify(completedFishIds);
+
                 }
             },
+            computed: {
+                computedCompletedFish: function() {
+                    return this.fishArray.filter(
+                        fish => this.completedFishIds.includes(fish.id)
+                    )
+                },
+                availableFish: function() {
+                    return this.fishArray.filter(
+                        fish => this.completedFishIds.includes(fish.id) == false
+                    )
+                }
+
+            },
             mounted: async function () {
-                // this.clearStorage()
-                this.fishes= await fetchFish()
+                this.clearStorage()
+                if (localStorage.fishes) {
+                    this.fishes = JSON.parse(localStorage.fishes)
+                } else {
+                    this.fishes= await fetchFish()
+                    localStorage.fishes = JSON.stringify(this.fishes);
+                }
+
+                if(localStorage.fishArray) {
+                    this.fishArray = JSON.parse(this.fishArray);
+                } else {
+                    this.fishArray = Object.values(this.fishes);
+                    localStorage.fishArray = JSON.stringify(this.fishArray);
+
+                }
+
                 if(localStorage.completedFish) {
                     this.completedFish = JSON.parse(localStorage.completedFish);
                 }
@@ -134,16 +176,9 @@
             </div>
             `
         })
-        async function fetchFish() {
-            if (localStorage.fishes) {
-                return JSON.parse(localStorage.fishes)
-            } else {
-                const fishes = await fetch('https://acnhapi.com/v1/fish')
-                    .then(response => response.json())
-                localStorage.fishes = JSON.stringify(fishes);
-                return fishes;
-            }
-
+        function fetchFish() {
+            return fetch('https://acnhapi.com/v1/fish')
+                .then(response => response.json())
         }
 
     </script>
