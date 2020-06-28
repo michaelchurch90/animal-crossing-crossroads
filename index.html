@@ -28,7 +28,7 @@
         </fish-row>
 
         <h2>Completed</h2>
-        <fish-row v-for="fish in computedCompletedFish" 
+        <fish-row v-for="fish in completedFish" 
             v-bind:key="fish.id"
             v-on:on-select="unCompleteFish(fish.id)" 
             v-bind:fish="fish" 
@@ -68,7 +68,7 @@
                 }
             },
             computed: {
-                computedCompletedFish: function() {
+                completedFish: function() {
                     return this.fishArray.filter(
                         fish => this.completedFishIds.includes(fish.id)
                     )
