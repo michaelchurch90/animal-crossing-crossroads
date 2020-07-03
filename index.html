@@ -19,33 +19,70 @@
     <h1>Animal Crossing</h1>
 
     <div id="app">
-        <h2>Availiable</h2>
-        <fish-row v-for="fish in availableFish" 
-            v-bind:key="fish.id"
-            v-on:on-select="completeFish(fish.id)" 
-            v-bind:fish="fish" 
-            v-bind:select-action="completeButtonText">
-        </fish-row>
+        <div v-for="category in sortOrder">
+            <h2>{{category}}</h2>
+            <fish-row v-for="fish in categorizeFish[category]" v-bind:key="fish.id"
+                v-on:on-select="completeFish(fish.id)" v-bind:fish="fish" v-bind:select-action="completeButtonText">
+        </div>
+
 
         <h2>Completed</h2>
-        <fish-row v-for="fish in completedFish" 
-            v-bind:key="fish.id"
-            v-on:on-select="unCompleteFish(fish.id)" 
-            v-bind:fish="fish" 
-            v-bind:select-action="unCompleteButtonText">
+        <fish-row v-for="fish in completedFish" v-bind:key="fish.id" v-on:on-select="unCompleteFish(fish.id)"
+            v-bind:fish="fish" v-bind:select-action="unCompleteButtonText">
         </fish-row>
     </div>
 
 
 
     <script>
+        function toReadableTime(hour) {
+            return hour > 12 ? `${hour % 12}pm` : `${hour}am`
+        }
+
+        function TimeCategory(start, end) {
+            this.start = start
+            this.end = end
+
+            this.display = function () {
+                const startFormat = toReadableTime(this.start)
+                const endFormat = toReadableTime(this.end)
+                return `${startFormat} - ${endFormat}`
+            }
+            this.isInRange = function (hour) {
+                if (this.start < this.end) {
+                    return (hour > this.start && hour < this.end)
+                } else {
+                    return (hour > this.start || hour < this.end)
+                }
+            }
+        }
+    
+        const morningEvening = new TimeCategory(9, 16)
+        const eveningMorning = new TimeCategory(16, 21)
+        const nightMorning = new TimeCategory(21, 4)
+
+        function determineSortOrder() {
+            const hour = new Date().getHours()
+            const initialOrder = [morningEvening, eveningMorning, nightMorning]
+            let count = 0
+            while (!initialOrder[0].isInRange(hour) && count < initialOrder.length) {
+                let time = initialOrder.shift()
+                initialOrder.push(time)
+                count++
+            }
+
+            const allDay = "All Day"
+            return [initialOrder[0].display(), initialOrder[1].display(), initialOrder[2].display(), allDay]
+        }
+
         var app = new Vue({
             el: '#app',
             data: {
                 completeButtonText: "Complete",
                 unCompleteButtonText: "Reset",
                 fishArray: [],
-                completedFishIds: []
+                completedFishIds: [],
+                sortOrder: determineSortOrder()
             },
             methods: {
                 completeFish: function (fishId) {
@@ -55,34 +92,62 @@
                     this.completedFishIds = this.completedFishIds
                         .filter(id => fishId !== id)
                 },
-                clearStorage: function() {
+                clearStorage: function () {
                     localStorage.removeItem("completedFishIds")
                     localStorage.removeItem("fishArray")
-
                 }
             },
             watch: {
                 completedFishIds(completedFishIds) {
-                    console.log("Saving completed fish ids")
-                    localStorage.completedFishIds  = JSON.stringify(completedFishIds);
+                    localStorage.completedFishIds = JSON.stringify(completedFishIds);
                 }
             },
             computed: {
-                completedFish: function() {
+                completedFish: function () {
                     return this.fishArray.filter(
                         fish => this.completedFishIds.includes(fish.id)
                     )
                 },
-                availableFish: function() {
+                availableFish: function () {
                     return this.fishArray.filter(
                         fish => this.completedFishIds.includes(fish.id) == false
                     )
+                },
+                fishAvailableInTheMonth: function () {
+                    const currentTime = new Date()
+                    const startTime = new Date();
+                    const endTime = new Date();
+
+                    return this.fishArray
+                        .filter(fish => !this.completedFishIds.includes(fish.id))
+                        .filter(fish => fish.availability['month-array-northern'].includes(currentTime.getMonth() + 1))
+                },
+                categorizeFish: function () {
+
+                    const temp = {
+                        "9am - 4pm": {
+                            "Ocean": [],
+                            "River": [],
+                            "Pond": []
+                        },
+                        "4pm - 9am": {},
+                        "All Day": {}
+                    }
+
+                    const result = this.fishArray
+                        .filter(fish => !this.completedFishIds.includes(fish.id))
+                        .reduce((groupedFish, fish) => {
+                            const timeKey = fish.availability.isAllDay ? "All Day" : fish.availability["time"]
+                            const appendedArray = [...(groupedFish[timeKey] || (groupedFish[timeKey] = [])), fish]
+                            return { ...groupedFish, [timeKey]: appendedArray }
+                        }, {})
+                    return result;
                 }
 
             },
             mounted: async function () {
                 // this.clearStorage()        
-                if(localStorage.fishArray) {
+                if (localStorage.fishArray) {
                     this.fishArray = JSON.parse(localStorage.fishArray);
                 } else {
                     const fishes = await fetchFish()
@@ -90,7 +155,7 @@
                     localStorage.fishArray = JSON.stringify(this.fishArray);
                 }
 
-                if(localStorage.completedFishIds) {
+                if (localStorage.completedFishIds) {
                     this.completedFishIds = JSON.parse(localStorage.completedFishIds);
                 }
             }
