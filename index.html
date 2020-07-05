@@ -15,17 +15,38 @@
 
 
 <body>
-
     <h1>Animal Crossing</h1>
 
     <div id="app">
+        <div v-for="category in sortOrder" v-if="categorizeFish[category]">
+            <h1>{{category}}</h1>
+            <div class="fish-card-container">
+                <div class="fish-card" v-for="fish in categorizeFish[category]" v-on:on-select="completeFish(fish.id)">
+                    <h2 class="fish-card-title">{{fish.name["name-USen"]}}</h2>
+                    <label class="fish-card-rarity fish-card-label">{{fish.availability.rarity}}</label>
+                    <label class="fish-card-shadow fish-card-label">{{fish.shadow}}</label>
+                    <img class="fish-card-image" v-bind:src="fish.icon_uri" />
+                    <button class="fish-card-button" v-on:click="completeFish(fish.id)">Complete</button>
+                </div>
+            </div>
+        </div>
+        <!-- 
+        <div v-if="fishArray[0]" class="fish-card">
+                <h2>{{fishArray[0].name["name-USen"]}}</h2>
+                <h3>{{fishArray[0].availability.rarity}}</h3>
+                <h3>{{fishArray[0].shadow}}</h3>
+                <img v-bind:src="fishArray[0].icon_uri" />
+                <button>Complete</button>
+        </div>
+
+    
         <div v-for="category in sortOrder">
             <h2>{{category}}</h2>
             <fish-row v-for="fish in categorizeFish[category]" v-bind:key="fish.id"
                 v-on:on-select="completeFish(fish.id)" v-bind:fish="fish" v-bind:select-action="completeButtonText">
         </div>
 
-
+-->
         <h2>Completed</h2>
         <fish-row v-for="fish in completedFish" v-bind:key="fish.id" v-on:on-select="unCompleteFish(fish.id)"
             v-bind:fish="fish" v-bind:select-action="unCompleteButtonText">
@@ -56,13 +77,12 @@
                 }
             }
         }
-    
+
         const morningEvening = new TimeCategory(9, 16)
-        const eveningMorning = new TimeCategory(16, 21)
+        const eveningMorning = new TimeCategory(16, 9)
         const nightMorning = new TimeCategory(21, 4)
 
-        function determineSortOrder() {
-            const hour = new Date().getHours()
+        function determineSortOrder(hour) {
             const initialOrder = [morningEvening, eveningMorning, nightMorning]
             let count = 0
             while (!initialOrder[0].isInRange(hour) && count < initialOrder.length) {
@@ -82,7 +102,7 @@
                 unCompleteButtonText: "Reset",
                 fishArray: [],
                 completedFishIds: [],
-                sortOrder: determineSortOrder()
+                sortOrder: determineSortOrder(new Date().getHours())
             },
             methods: {
                 completeFish: function (fishId) {
@@ -134,14 +154,18 @@
                         "All Day": {}
                     }
 
-                    const result = this.fishArray
+                    const groupedByTime = this.fishArray
                         .filter(fish => !this.completedFishIds.includes(fish.id))
                         .reduce((groupedFish, fish) => {
                             const timeKey = fish.availability.isAllDay ? "All Day" : fish.availability["time"]
+                            const locationKey = fish.availability.location
+
                             const appendedArray = [...(groupedFish[timeKey] || (groupedFish[timeKey] = [])), fish]
                             return { ...groupedFish, [timeKey]: appendedArray }
-                        }, {})
-                    return result;
+                        }, {})  
+
+                        console.log(groupedByTime)
+                    return groupedByTime;
                 }
 
             },

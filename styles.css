@@ -81,9 +81,8 @@ p {
         "fish-image complete         .        .       .      months"
         ;
 
-    
     box-shadow:  1px 1px 1px 1px rgba(0,0,0,0.75);;
-    grid-template-columns: auto repeat(4, 1fr) 3fr;
+    grid-template-columns: auto repeat(4, 1fr) 1.5fr;
     background: var(--white);
     border-radius: 10px;
     border-top-left-radius: 0;
@@ -180,5 +179,57 @@ button.complete {
     
 }
 
+.fish-card-container {
+    display: flex;
+    flex-wrap: wrap;
 
+
+}
+.fish-card {
+    background: white;
+    display: grid;
+    grid-template-areas: 
+    "title title"
+    "rarity shadow"
+    "image image"
+    "button . ";
+    justify-items: center;
+    align-items: center;
+    margin: .2em;
+    width: 12em;
+    height: auto;
+    border-radius: 8px;
+
+}
+.fish-card-rarity {
+    grid-area: rarity;
+    margin: 0;
+    padding: 0;
+}
+
+.fish-card-shadow {
+    grid-area: shadow;
+
+}
+
+.fish-card-title {
+    grid-area: title;
+}
+
+.fish-card-label {
+    word-wrap: break-word;
+    margin: 0;
+    padding: 0;
+
+    font-size: 1em;
+
+}
+
+.fish-card-image {
+    grid-area: image;
+}
+
+.fish-card-button {
+    grid-area: button;
+}
 
